@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>user page</title>
+        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.css"></link> -->
+        <!-- Favicon-->
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" crossorigin="anonymous"></script>
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="http://127.0.0.1:5000/static/css/styles.css" rel="stylesheet" />
+        <style>
+            #Box,Box1{
+                padding: 25px;
+
+                height: 84vh;
+
+            }
+            .row{
+                margin: 100px 25px;
+
+            }
+            body{
+                background-color: aliceblue;
+            }
+            .col-lg-4{
+            background-image:url("https://images.unsplash.com/photo-1624897174291-1bd715e371d5?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGNyaWNrZXR8ZW58MHx8MHx8fDA%3D");
+            }
+        </style>
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+            <div class="container">
+                <!-- <li class="nav-item"><a class="nav-link" href="#page-top">AUTISM</a></li> -->
+                <a class="navbar-brand h1" href="/home">CRICKET TEAM PREDICTION</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars ms-1"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="/home">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+
+        <div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div id="Box1">
+                        <center><h3>Team Prediction</h3></center>
+                        <hr>
+                     
+                        <form method="post" action="/predict">
+                            <label for="mode">Format</label>
+                            <select name="mode" id="mode" class="form-control" required>
+                                <option value="">--- select ---</option>
+                                <option value="ODI">ODI</option>
+                                <option value="T20">T20</option>
+                                <option value="TEST">TEST</option>
+                            </select>
+                       
+                            <label for="bat">Batsman</label>
+                            <input type="number" class="form-control" name="bat" id="bat" placeholder="Enter the no of batsman"/>
+                      
+                            <label for="bowl">Bowler</label>
+                            <input type="number" class="form-control" name="bowl" id="bowl" placeholder="Enter the no of bowler"/>
+                          
+                            <label for="name">Your Team</label>
+                            <select name="name" id="name" class="form-control">
+                                <option value="">--- select ---</option>
+                                <option value="India">India</option>
+                            </select>
+                            <br>
+
+                            <label for="oname">Opponent Team</label>
+                            <select name="oname" id="oname" class="form-control">
+                                <option value="">--- select ---</option>
+                                <option value="New Zealand">New Zealand</option>
+                                <!--<option value="Netherlands">Netherlands</option>
+                                <option value="Zimbabwe">Zimbabwe</option>-->
+                                <option value="South Africa">South Africa</option>
+                                <option value="England">England</option>
+                                <option value="Bangladesh">Bangladesh</option>
+                                <option value="Sri Lanka">Sri Lanka</option>
+                                <option value="Australia">Australia</option>
+                                <!--<option value="Nepal">Nepal</option>
+                                <option value="Afghanistan">Afghanistan</option>-->
+                                <option value="Pakistan">Pakistan</option>
+                                <option value="West Indies">West Indies</option>
+                            </select>
+                            <br>
+                            <input type="submit" value="Submit" class="btn btn-success">
+                          </form>
+                    </div>
+                </div>
+                {% if msg %}
+                    <div class="col-lg-8">
+                        <div id="Box">
+                            <br><br><br>
+                            <h3>{{msg}}</h3>
+                        </div>
+                    </div>
+                {% else %} 
+                <div class="col-lg-4">
+                    <div id="Box">
+                        {% if bts %}
+                        <center><h3>Top Batsmen</h3></center>
+                        <hr><br>
+                        <table class="table" style="text-align: center !important;">
+                            <tr>
+                                <th>Player</th>
+                                <th>Mat</th>
+                                <th>Ave </th>
+                                <th> SR</th>
+                            </tr>
+                            {% for row in bts %}
+                                <tr>
+                                    <td>{{row[0]}}</td>
+                                    {% for col in row[1:] %}
+                                        <td>{{'%0.2f' % col|float}}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </table>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div id="Box">
+                        {% if bls %}
+                        <center><h3>Top Bowlers</h3></center>
+                        <hr>
+                        <br>
+                        <table class="table" style="text-align: center !important;">
+                            <tr>
+                                <th>Player</th>
+                                <th>   Mat </th>
+                                <th> Mdns</th>
+                                <th>   Ave </th>
+                                <th> Econ</th>
+                            </tr>
+                            {% for row in bls %}
+                                <tr>
+                                    <td>{{row[0]}}</td>
+                                    {% for col in row[1:] %}
+                                        <td>{{'%0.2f' % col|float}}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </table>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="http://127.0.0.1:5000/static/js/scripts.js"></script>
+        
+    </body>
+</html>

@@ -1,0 +1,30 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# SQLite database
+*.db
+*.sqlite3
+
+# Machine Learning model files
+*.joblib
+*.pkl
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VSCode
+.vscode/
+
+# Python logs
+*.log
+
+# Environment variables
+.env
