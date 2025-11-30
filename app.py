@@ -10,14 +10,26 @@ from t20bat import *
 from t20bowl import *
 from testbat import *
 from testbowl import *
-
-connection = sqlite3.connect('user_data.db')
-cursor = connection.cursor()
-
-command = """CREATE TABLE IF NOT EXISTS user(name TEXT, password TEXT, mobile TEXT, email TEXT)"""
-cursor.execute(command)
+import os
 
 app = Flask(__name__)
+
+# Function to get database connection
+def get_db_connection():
+    # Use absolute path for database
+    db_path = os.path.join(os.getcwd(), 'user_data.db')
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+# Initialize database
+def init_db():
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    command = """CREATE TABLE IF NOT EXISTS user(name TEXT, password TEXT, mobile TEXT, email TEXT)"""
+    cursor.execute(command)
+    connection.commit()
+    connection.close()
 
 @app.route('/')
 def index():
@@ -30,8 +42,7 @@ def home():
 @app.route('/userlog', methods=['GET', 'POST'])
 def userlog():
     if request.method == 'POST':
-
-        connection = sqlite3.connect('user_data.db')
+        connection = get_db_connection()
         cursor = connection.cursor()
 
         name = request.form['name']
@@ -41,6 +52,7 @@ def userlog():
         cursor.execute(query)
 
         result = cursor.fetchall()
+        connection.close()
 
         if len(result) == 0:
             return render_template('index.html', msg='Sorry, Incorrect Credentials Provided,  Try Again')
@@ -53,8 +65,7 @@ def userlog():
 @app.route('/userreg', methods=['GET', 'POST'])
 def userreg():
     if request.method == 'POST':
-
-        connection = sqlite3.connect('user_data.db')
+        connection = get_db_connection()
         cursor = connection.cursor()
 
         name = request.form['name']
@@ -64,11 +75,9 @@ def userreg():
         
         print(name, mobile, email, password)
 
-        command = """CREATE TABLE IF NOT EXISTS user(name TEXT, password TEXT, mobile TEXT, email TEXT)"""
-        cursor.execute(command)
-
         cursor.execute("INSERT INTO user VALUES ('"+name+"', '"+password+"', '"+mobile+"', '"+email+"')")
         connection.commit()
+        connection.close()
 
         return render_template('index.html', msg='Successfully Registered')
     
@@ -153,7 +162,6 @@ def logout():
     return render_template('index.html')
 
 if __name__ == "__main__":
-    import os
+    init_db()  # Initialize database when app starts
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
-
